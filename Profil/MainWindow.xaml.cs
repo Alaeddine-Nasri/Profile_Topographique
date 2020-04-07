@@ -31,17 +31,20 @@ namespace Profil
 
             MyValues = new ChartValues<ObservableValue>
             {
-                new ObservableValue(2),
-                new ObservableValue(8),
-                new ObservableValue(18),
-                new ObservableValue(23),
+                new ObservableValue(20),
+                new ObservableValue(80),
+                new ObservableValue(200),
                 new ObservableValue(10),
+                new ObservableValue(100),
+                new ObservableValue(60),
+
 
             };
          
             for (compteur = 0; compteur < 1; compteur++)
             {
-                MyValues.Add(new ObservableValue(3));//We add Y ! 
+                MyValues.Add(new ObservableValue(250));//We add Y ! 
+
             }
                 SeriesCollection = new SeriesCollection
                 {
@@ -50,13 +53,13 @@ namespace Profil
                 new LineSeries
                 {
                     Title = "Topgraphie",
-                    //Fill = Brushes.Red,
-                  //  StrokeThickness = 4,
+                   // Fill = Brushes.Red,
+                   // StrokeThickness = 4,
                     Values = MyValues,//les valeurs
-                    PointGeometrySize = 10,
+                 //   PointGeometrySize = 4,
                     AreaLimit = 0,
-                 //   LineSmoothness = 0,
-                 //   DataLabels = true,
+                   // LineSmoothness = 0,
+                    //DataLabels = true,
                    
                     
 
@@ -80,24 +83,9 @@ namespace Profil
             };
                 
 
-                Labels = new[] { "20m", "30m", "40m", "50m", "60m","70m" };// l'absis des x
+                Labels = new[] { "20m", "30m", "40m", "50m", "60m","70m", "80m", "90m" };// l'absis des x
                 YFormatter = value => value.ToString("C");
-             //   Console.WriteLine("Bonjour C#");
-            
-            
-            //modifying the series collection will animate and update the chart
-            /*    SeriesCollection.Add(new LineSeries
-                {
-                    Title = "Series 4",
-                    Values = new ChartValues<double> { 5, 3, 2, 4 },
-                    LineSmoothness = 0, //0: straight lines, 1: really smooth lines
-                    PointGeometry = Geometry.Parse("m 25 70.36218 20 -28 -20 22 -8 -6 z"),
-                    PointGeometrySize = 50,
-                    PointForeground = Brushes.Gray
-                });*/
-
-            //modifying any series values will also animate and update the chart
-            //   SeriesCollection[3].Values.Add(5d);
+             
 
             DataContext = this;
         }
@@ -112,12 +100,29 @@ namespace Profil
 }
 
 
+//   Console.WriteLine("Bonjour C#");
+
+
+//modifying the series collection will animate and update the chart
+/*    SeriesCollection.Add(new LineSeries
+    {
+        Title = "Series 4",
+        Values = new ChartValues<double> { 5, 3, 2, 4 },
+        LineSmoothness = 0, //0: straight lines, 1: really smooth lines
+        PointGeometry = Geometry.Parse("m 25 70.36218 20 -28 -20 22 -8 -6 z"),
+        PointGeometrySize = 50,
+        PointForeground = Brushes.Gray
+    });*/
+
+//modifying any series values will also animate and update the chart
+//   SeriesCollection[3].Values.Add(5d);
 
 
 
 
 
- 
+
+
 
 
 
