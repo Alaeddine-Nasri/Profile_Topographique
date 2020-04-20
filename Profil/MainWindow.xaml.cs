@@ -1,8 +1,10 @@
 ﻿using LiveCharts;
+using LiveCharts.Configurations;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +17,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using iTextSharp.text;
+
+
+using iTextSharp.text.pdf;
 
 namespace Profil
 {
@@ -27,26 +34,27 @@ namespace Profil
         public MainWindow()
         {
             InitializeComponent();
+            
             int compteur;
+            int a = 20;
+            double b = 100.20;
 
-            MyValues = new ChartValues<ObservableValue>
-            {
-                new ObservableValue(20),
-                new ObservableValue(80),
-                new ObservableValue(200),
-                new ObservableValue(10),
-                new ObservableValue(100),
-                new ObservableValue(60),
+            MyValues = new ChartValues<ObservablePoint>();
 
-
-            };
-         
+                //{
+                //        new ObservablePoint(100, 500),
+                //      //  new ObservablePoint(1500, 800)
+                //};
             for (compteur = 0; compteur < 1; compteur++)
             {
-                MyValues.Add(new ObservableValue(250));//We add Y ! 
-
+                MyValues.Add(new ObservablePoint(a, b));
+                MyValues.Add(new ObservablePoint(50, 800));
+                MyValues.Add(new ObservablePoint(500, 700));
+                MyValues.Add(new ObservablePoint(900, 300));
+                MyValues.Add(new ObservablePoint(1400, 900));
             }
-                SeriesCollection = new SeriesCollection
+
+            SeriesCollection = new SeriesCollection
                 {
 
 
@@ -58,64 +66,77 @@ namespace Profil
                     Values = MyValues,//les valeurs
                  //   PointGeometrySize = 4,
                     AreaLimit = 0,
-                   // LineSmoothness = 0,
+                    LineSmoothness = 0.4,
                     //DataLabels = true,
                    
                     
 
-                },
-               
-                
-                
-              /*  new LineSeries
-                {
-                    Title = "Series 2",
-                    Values = new ChartValues<double> { 6, 7, 3, 4 ,6 },
-                    PointGeometry = null
-                },
-                new LineSeries
-                {
-                    Title = "Series 3",
-                    Values = new ChartValues<double> { 4,2,7,2,7 },
-                    PointGeometry = DefaultGeometries.Square,
-                    PointGeometrySize = 15
-                }*/
+                }
             };
-                
 
-                Labels = new[] { "20m", "30m", "40m", "50m", "60m","70m", "80m", "90m" };// l'absis des x
-                YFormatter = value => value.ToString("C");
-             
+            
+
+            
+
+            //Formatter = value => Math.Pow(Base, value).ToString("N");
 
             DataContext = this;
         }
 
         public SeriesCollection SeriesCollection { get; set; }
-        public LineSeries LineSeries { get; set; }
-        public string[] Labels { get; set; }
-        public Func<double, string> YFormatter { get; set; }
-        public ChartValues<ObservableValue> MyValues { get; set; }
+        public Func<double, string> Formatter { get; set; }
+        public double Base { get; set; }
+        public ChartValues<ObservablePoint> MyValues { get; set; }
+
+        
+
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+            PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream("ISM.pdf", FileMode.Create));
+            doc.Open();
+            //   System.Windows.Documents.Paragraph name = new System.Windows.Documents.Paragraph();
+            // doc.Add(name);
+            //      MemoryStream ms = new MemoryStream();
+            //   var ms = new MemoryStream();
+            //        chart1.SaveImage(ms, ChartImageFormat.Png);
+            //        String filePath = @"C:\Users\xxx\Desktop\test.jpg";
+          
+                var viewbox = new Viewbox();
+                viewbox.Child = chart1;
+                viewbox.Measure(chart1.RenderSize);
+                viewbox.Arrange(new Rect(new Point(0, 0), chart1.RenderSize));
+                chart1.Update(true, true); //force chart redraw
+                viewbox.UpdateLayout();
+
+                SaveToPng(chart1, "Chart.png");
+                //png file was created at the root directory. 
+
+            // doc.Close();
+
+
+        }
+        public void SaveToPng(FrameworkElement visual, string fileName)
+        {
+            var encoder = new PngBitmapEncoder();
+            EncodeVisual(visual, fileName, encoder);
+        }
+
+        private static void EncodeVisual(FrameworkElement visual, string fileName, BitmapEncoder encoder)
+        {
+            var bitmap = new RenderTargetBitmap((int)visual.ActualWidth, (int)visual.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(visual);
+            var frame = BitmapFrame.Create(bitmap);
+            encoder.Frames.Add(frame);
+            using (var stream = File.Create(fileName)) encoder.Save(stream);
+        }
     }
 
 }
 
 
-//   Console.WriteLine("Bonjour C#");
 
-
-//modifying the series collection will animate and update the chart
-/*    SeriesCollection.Add(new LineSeries
-    {
-        Title = "Series 4",
-        Values = new ChartValues<double> { 5, 3, 2, 4 },
-        LineSmoothness = 0, //0: straight lines, 1: really smooth lines
-        PointGeometry = Geometry.Parse("m 25 70.36218 20 -28 -20 22 -8 -6 z"),
-        PointGeometrySize = 50,
-        PointForeground = Brushes.Gray
-    });*/
-
-//modifying any series values will also animate and update the chart
-//   SeriesCollection[3].Values.Add(5d);
 
 
 

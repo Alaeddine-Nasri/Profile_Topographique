@@ -26,3 +26,5 @@ C:\Users\Dell\Desktop\C-sharp\Profile TopoGraphique\Profil\Profil\bin\Debug\Mate
 C:\Users\Dell\Desktop\C-sharp\Profile TopoGraphique\Profil\Profil\bin\Debug\MaterialDesignThemes.Wpf.pdb
 C:\Users\Dell\Desktop\C-sharp\Profile TopoGraphique\Profil\Profil\bin\Debug\MaterialDesignThemes.Wpf.xml
 C:\Users\Dell\Desktop\C-sharp\Profile TopoGraphique\Profil\Profil\obj\Debug\App.baml
+C:\Users\Dell\Desktop\C-sharp\Profile TopoGraphique\Profil\Profil\bin\Debug\itextsharp.dll
+C:\Users\Dell\Desktop\C-sharp\Profile TopoGraphique\Profil\Profil\bin\Debug\itextsharp.xml
