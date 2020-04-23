@@ -93,28 +93,36 @@ namespace Profil
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
-            PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream("ISM.pdf", FileMode.Create));
-            doc.Open();
+            //  Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+            //   PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream("ISM.pdf", FileMode.Create));
+            // doc.Open();
             //   System.Windows.Documents.Paragraph name = new System.Windows.Documents.Paragraph();
             // doc.Add(name);
             //      MemoryStream ms = new MemoryStream();
             //   var ms = new MemoryStream();
             //        chart1.SaveImage(ms, ChartImageFormat.Png);
             //        String filePath = @"C:\Users\xxx\Desktop\test.jpg";
-          
-                var viewbox = new Viewbox();
-                viewbox.Child = chart1;
-                viewbox.Measure(chart1.RenderSize);
-                viewbox.Arrange(new Rect(new Point(0, 0), chart1.RenderSize));
-                chart1.Update(true, true); //force chart redraw
+
+            
+            Viewbox viewbox = new Viewbox();
+            
+        //    var ParentPanelCollection = (chart.Parent as Panel).Children as UIElementCollection;
+        //    ParentPanelCollection.Clear();
+
+            
+
+                 
+            viewbox.Child = chart;
+            viewbox.Measure(chart.RenderSize);
+                viewbox.Arrange(new Rect(new Point(0, 0), chart.RenderSize));
+                chart.Update(true, true); //force chart redraw
                 viewbox.UpdateLayout();
 
-                SaveToPng(chart1, "Chart.png");
-                //png file was created at the root directory. 
+                SaveToPng(chart, "Chart2.png");
+            //png file was created at the root directory. 
 
             // doc.Close();
-
+          
 
         }
         public void SaveToPng(FrameworkElement visual, string fileName)
