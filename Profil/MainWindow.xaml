@@ -16,7 +16,8 @@
          FontFamily="{DynamicResource MaterialDesignFont}"
         Title="MainWindow" Height="450" Width="825.5">
 
-    <Grid>
+    <Grid x:Name="test">
+        
         <lvc:CartesianChart x:Name="chart" Series="{Binding SeriesCollection}" Margin="0,0,118,0">
 
 

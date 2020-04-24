@@ -49,9 +49,9 @@ namespace Profil
             {
                 MyValues.Add(new ObservablePoint(a, b));
                 MyValues.Add(new ObservablePoint(50, 800));
-                MyValues.Add(new ObservablePoint(500, 700));
-                MyValues.Add(new ObservablePoint(900, 300));
-                MyValues.Add(new ObservablePoint(1400, 900));
+                MyValues.Add(new ObservablePoint(300, 1200));
+                MyValues.Add(new ObservablePoint(500, 960));
+                MyValues.Add(new ObservablePoint(600, 2000));
             }
 
             SeriesCollection = new SeriesCollection
@@ -102,27 +102,25 @@ namespace Profil
             //   var ms = new MemoryStream();
             //        chart1.SaveImage(ms, ChartImageFormat.Png);
             //        String filePath = @"C:\Users\xxx\Desktop\test.jpg";
+            //    var ParentPanelCollection = (chart.Parent as Panel).Children as UIElementCollection;
+            //    ParentPanelCollection.Clear();
 
-            
             Viewbox viewbox = new Viewbox();
-            
-        //    var ParentPanelCollection = (chart.Parent as Panel).Children as UIElementCollection;
-        //    ParentPanelCollection.Clear();
 
             
 
-                 
-            viewbox.Child = chart;
-            viewbox.Measure(chart.RenderSize);
-                viewbox.Arrange(new Rect(new Point(0, 0), chart.RenderSize));
-                chart.Update(true, true); //force chart redraw
-                viewbox.UpdateLayout();
-
-                SaveToPng(chart, "Chart2.png");
+           RenderTargetBitmap rtb = new RenderTargetBitmap((int)chart.ActualWidth, (int)chart.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            rtb.Render(visual: chart);
+            PngBitmapEncoder png = new PngBitmapEncoder();
+            png.Frames.Add(BitmapFrame.Create(rtb));
+            MemoryStream stream = new MemoryStream();
+            png.Save(stream);
+           
+                SaveToPng(chart, "MyChart.png");
             //png file was created at the root directory. 
 
             // doc.Close();
-          
+
 
         }
         public void SaveToPng(FrameworkElement visual, string fileName)
@@ -142,6 +140,18 @@ namespace Profil
     }
 
 }
+
+// Image image = Image.FromStream(stream);
+
+//DependencyObject og = LogicalTreeHelper.GetParent(chart);
+//test.Children.Remove(chart);
+//viewbox.Child = chart;
+
+//viewbox.Measure(chart.RenderSize);
+//    viewbox.Arrange(new Rect(new Point(0, 0), chart.RenderSize));
+//    chart.Update(true, true); //force chart redraw
+//   viewbox.UpdateLayout();
+
 
 
 
