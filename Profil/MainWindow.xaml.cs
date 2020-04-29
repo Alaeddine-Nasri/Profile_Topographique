@@ -29,8 +29,8 @@ namespace Profil
     
     public partial class MainWindow : Window
     {
-        
-        
+        private object pdfViewer;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -48,10 +48,10 @@ namespace Profil
             for (compteur = 0; compteur < 1; compteur++)
             {
                 MyValues.Add(new ObservablePoint(a, b));
-                MyValues.Add(new ObservablePoint(50, 800));
-                MyValues.Add(new ObservablePoint(300, 1200));
-                MyValues.Add(new ObservablePoint(500, 960));
-                MyValues.Add(new ObservablePoint(600, 2000));
+                MyValues.Add(new ObservablePoint(50, 1200));
+                MyValues.Add(new ObservablePoint(300, 300));
+                MyValues.Add(new ObservablePoint(500, 860));
+                MyValues.Add(new ObservablePoint(600, 150));
             }
 
             SeriesCollection = new SeriesCollection
@@ -93,9 +93,40 @@ namespace Profil
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //  Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
-            //   PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream("ISM.pdf", FileMode.Create));
-            // doc.Open();
+            Viewbox viewbox = new Viewbox();
+
+
+
+            RenderTargetBitmap rtb = new RenderTargetBitmap((int)chart.ActualWidth, (int)chart.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            rtb.Render(visual: chart);
+            PngBitmapEncoder png = new PngBitmapEncoder();
+            png.Frames.Add(BitmapFrame.Create(rtb));
+            MemoryStream stream = new MemoryStream();
+            png.Save(stream);
+
+            SaveToPng(chart, "MyChart.png");
+
+
+            Document doc = new Document(iTextSharp.text.PageSize.LETTER, 10, 10, 42, 35);
+               PdfWriter wri = PdfWriter.GetInstance(doc, new FileStream("ISM.pdf", FileMode.Create));
+          //   doc.Open();
+           
+                //iTextSharp.text.pdf.PdfWriter.GetInstance(doc, new FileStream(generatedPdfSaveFilePath, FileMode.Create));
+                doc.Open();
+                iTextSharp.text.Image jpg = iTextSharp.text.Image.GetInstance("./MyChart.PNG");
+                jpg.Border = iTextSharp.text.Rectangle.BOX;
+                jpg.BorderWidth = 5f;
+                doc.Add(jpg);
+
+                   doc.Add(new iTextSharp.text.Paragraph("Original Width: " + jpg.Width.ToString()));
+            doc.Add(new iTextSharp.text.Paragraph("Original Height " + jpg.Height.ToString()));
+            doc.Add(new iTextSharp.text.Paragraph("Scaled Width: " + jpg.ScaledWidth.ToString()));
+            doc.Add(new iTextSharp.text.Paragraph("Scaled Height " + jpg.ScaledHeight.ToString()));
+            
+            float Resolution = jpg.Width / jpg.ScaledWidth * 72f;
+            doc.Add(new iTextSharp.text.Paragraph("Resolution: " + Resolution));
+
+
             //   System.Windows.Documents.Paragraph name = new System.Windows.Documents.Paragraph();
             // doc.Add(name);
             //      MemoryStream ms = new MemoryStream();
@@ -105,24 +136,13 @@ namespace Profil
             //    var ParentPanelCollection = (chart.Parent as Panel).Children as UIElementCollection;
             //    ParentPanelCollection.Clear();
 
-            Viewbox viewbox = new Viewbox();
-
             
-
-           RenderTargetBitmap rtb = new RenderTargetBitmap((int)chart.ActualWidth, (int)chart.ActualHeight, 96, 96, PixelFormats.Pbgra32);
-            rtb.Render(visual: chart);
-            PngBitmapEncoder png = new PngBitmapEncoder();
-            png.Frames.Add(BitmapFrame.Create(rtb));
-            MemoryStream stream = new MemoryStream();
-            png.Save(stream);
-           
-                SaveToPng(chart, "MyChart.png");
             //png file was created at the root directory. 
 
-            // doc.Close();
-
+             doc.Close();
 
         }
+
         public void SaveToPng(FrameworkElement visual, string fileName)
         {
             var encoder = new PngBitmapEncoder();
